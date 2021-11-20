@@ -2,26 +2,26 @@
 version: 2
 
 models:
-  - name: my_first_dbt_model
-    description: "A starter dbt model"
-    columns:
-      - name: id
-        description: "The primary key for this table"
-        tests:
-          - unique
-          - not_null
+  # - name: my_first_dbt_model
+  #   description: "A starter dbt model"
+  #   columns:
+  #     - name: id
+  #       description: "The primary key for this table"
+  #       tests:
+  #         - unique
+  #         - not_null
 
-  - name: my_second_dbt_model
-    description: "A starter dbt model"
-    columns:
-      - name: id
-        description: "The primary key for this table"
-        tests:
-          - unique
-          - not_null
+  # - name: my_second_dbt_model
+  #   description: "A starter dbt model"
+  #   columns:
+  #     - name: id
+  #       description: "The primary key for this table"
+  #       tests:
+  #         - unique
+  #         - not_null
 
   - name: stg_superheroes
-    description: Demographics about each superhero such as name, hair color, height and weight.
+    description: Demographics about each superhero such as name, hair color, height and weight_kg.
     columns:
       - name: name
         tests:
@@ -29,6 +29,127 @@ models:
       - name: height
         tests:
           - positive_values
-      - name: weight
+      - name: weight_kg
+        # tests:
+        #   - positive_values
+
+  - name: stg_users
+    description: User Information
+    columns:
+      - name: user_id
         tests:
-          - positive_values
+          - not_null
+          - unique
+      - name: first_name
+      - name: last_name
+      - name: email
+      - name: phone_number            
+      - name: created_at   
+      - name: updated_at   
+      - name: address_id 
+        tests:
+          - relationships:
+              to: ref('addresses')
+              field: user_id                    
+
+
+  - name: stg_events
+    description: User Events
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+      - name: session_id
+      - name: user_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_users')
+              field: user_id
+      - name: event_type
+      - name: page_url
+      - name: created_at
+        # tests:
+        #   - not_null      
+
+  - name: stg_addresses
+    description: User Info
+    columns:
+      - name: address_id
+        tests:
+          - not_null
+          - unique
+      - name: address
+      - name: zipcode
+      - name: state
+      - name: country 
+        tests:
+          - not_null           
+
+  - name: stg_orders
+    description: Order Info
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+      - name: promo_id
+        tests:
+          - relationships:
+              to: ref('stg_promos')
+              field: promo_id
+      - name: user_id
+        tests:
+          - relationships:
+              to: ref('stg_users')
+              field: user_id      
+      - name: address_id
+        tests:
+          - relationships:
+              to: ref('stg_addresses')
+              field: address_id       
+      - name: created_at
+        # tests:
+        #   - not_null       
+      - name: order_cost
+      - name: shipping_cost
+      - name: order_total
+      - name: tracking_id  
+      - name: shipping_service
+      - name: estimated_delivery_at
+      - name: delivery_at
+      - name: status  
+
+  - name: stg_order_items
+    description: order item info
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+      - name: product_id
+        tests:
+          - relationships:
+              to: ref('stg_products')
+              field: product_id         
+      - name: quantity
+
+  - name: stg_products
+    description: product info
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+      - name: name
+      - name: price
+      - name: quantity      
+
+  - name: stg_promos
+    description: promo info
+    columns:
+      - name: promo_id
+        tests:
+          - not_null
+          - unique
+      - name: discount
+      - name: status
