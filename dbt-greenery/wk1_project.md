@@ -8,7 +8,7 @@ Q2: On average, how many orders do we receive per hour?
 ```sql
 with order_info as
 (
-select count(order_id) total_orders, date_trunc('hour', created_at) hr from orders group by 2
+select count(order_id) total_orders, date_trunc('hour', created_at) hr from dbt_harminder_s.stg_orders group by 2
 )
 select round(avg(total_orders),2) avg_orders from order_info;
 ```
@@ -18,7 +18,7 @@ Q3: On average, how long does an order take from being placed to being delivered
 ```sql
 with delivery_time as 
 (
-select delivered_at, created_at,  (EXTRACT(EPOCH FROM delivered_at - created_at)/3600)::Integer as hrs from orders where delivered_at is not null and created_at is not null
+select delivered_at, created_at,  (EXTRACT(EPOCH FROM delivered_at - created_at)/3600)::Integer as hrs from dbt_harminder_s.stg_orders where delivered_at is not null and created_at is not null
 )
 select round(avg(hrs),2) average_hours, round(avg(hrs/24),2)  average_days from delivery_time;
 ```
@@ -33,7 +33,7 @@ Q4: How many users have only made one purchase? Two purchases? Three+ purchases?
 with num_orders as
 (select user_id
     ,count(distinct order_id) num_of_orders 
-    from orders 
+    from dbt_harminder_s.stg_orders 
     group by 1
 )
 select SUM(case when num_of_orders = 1 then 1 else 0 end) users_having_1_purchase
@@ -53,7 +53,7 @@ with sessions_info as
 (
 select count(distinct session_id) distinct_session_id
  ,date_trunc('hour', created_at) session_hr 
- from events 
+ from dbt_harminder_s.stg_events 
  where created_at is not null
  group by date_trunc('hour', created_at) 
 )
