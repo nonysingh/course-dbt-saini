@@ -1,0 +1,75 @@
+
+version: 2
+
+models:
+
+  - name: int_users
+    description: "calculate recency, tenure, customer_type"
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+          - unique
+      - name: order_recency
+      - name: last_touch_recency
+      - name: user_tenure
+      - name: num_orders
+      - name: customer_type
+      - name: total_order_value
+      - name: avg_order_value
+      - name: state
+      - name: country
+
+  - name: dim_users
+    description: "user level info"
+    columns:
+      - name: user_id
+        description: primary_key
+        tests:
+          - not_null
+          - unique
+      - name: first_name
+      - name: last_name
+      - name: email
+      - name: phone_number
+      - name: created_at
+      - name: updated_at
+      - name: address_id
+      - name: state
+      - name: country
+      - name: recency_days
+      - name: user_tenure
+      - name: num_orders
+      - name: customer_type
+      - name: total_order_value
+
+  - name: fact_orders
+    description: "order info"
+    columns:
+      - name: order_id
+        description: primary key
+        tests:
+          - not_null
+      - name: product_id          
+      - name: user_id
+      - name: first_name
+      - name: last_name
+      - name: email
+      - name: phone_number
+      - name: product_id
+      - name: quantity
+      - name: order_total
+      - name: promo_id
+      - name: promo_discount
+      - name: promo_status
+      - name: address_id
+      - name: state
+      - name: country
+      - name: order_creation_dt
+      - name: order_cost
+      - name: shipping_cost
+      - name: tracking_id
+      - name: shipping_service
+      - name: est_delivery_dt
+      - name: delivered_at 
+      - name: order_status

@@ -1,0 +1,33 @@
+
+version: 2
+
+models:
+
+  - name: event_insights
+    columns:
+      - name: user_id
+      - name: session_id
+      - name: page_url
+      - name: event_type
+        tests:
+          - not_null      
+      - name: created_at
+        tests:
+          - not_null      
+
+  - name: user_order_agg
+    columns:
+      - name: user_id
+        tests:
+          - not_null  
+          - unique      
+      - name: email
+      - name: created_at
+      - name: state
+      - name: country
+      - name: user_tenure
+      - name: recency_days
+      - name: num_orders
+      - name: customer_type
+      - name: total_order_value
+      - name: avg_order_value
